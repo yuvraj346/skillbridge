@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - SkillBridge{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- Logo -->
+        <div class="text-center mb-4">
+            <div class="logo-icon gradient-primary rounded-3 p-3 d-inline-flex mb-3">
+                <i class="bi bi-lightning-charge-fill text-white fs-2"></i>
+            </div>
+            <h2 class="fw-bold">Join SkillBridge</h2>
+            <p class="text-muted">Create your account and start connecting</p>
+        </div>
+
+        <!-- Registration Form -->
+        <form method="POST" action="{{ url_for('auth.register') }}" class="needs-validation" novalidate>
+            <!-- Username -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="johndoe" required
+                    minlength="3">
+                <div class="invalid-feedback">
+                    Username must be at least 3 characters.
+                </div>
+            </div>
+
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="full_name" name="full_name" placeholder="John Doe">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="john@example.com"
+                    required>
+                <div class="invalid-feedback">
+                    Please enter a valid email address.
+                </div>
+            </div>
+
+            <!-- User Type -->
+            <div class="mb-3">
+                <label class="form-label">I want to:</label>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <input type="radio" class="btn-check" name="user_type" id="client" value="client" checked>
+                        <label class="btn btn-outline-primary w-100" for="client">
+                            <i class="bi bi-search d-block fs-4 mb-2"></i>
+                            Find Services
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <input type="radio" class="btn-check" name="user_type" id="provider" value="provider">
+                        <label class="btn btn-outline-primary w-100" for="provider">
+                            <i class="bi bi-briefcase d-block fs-4 mb-2"></i>
+                            Offer Services
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="••••••••"
+                    required minlength="8">
+                <div class="invalid-feedback">
+                    Password must be at least 8 characters.
+                </div>
+                <small class="text-muted">At least 8 characters with letters and numbers</small>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+                <label for="password_confirm" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="password_confirm" name="password_confirm"
+                    placeholder="••••••••" required>
+                <div class="invalid-feedback">
+                    Passwords must match.
+                </div>
+            </div>
+
+            <!-- Terms & Conditions -->
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="terms" required>
+                <label class="form-check-label small" for="terms">
+                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and
+                    <a href="#" class="text-primary">Privacy Policy</a>
+                </label>
+                <div class="invalid-feedback">
+                    You must agree to the terms.
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-gradient-primary btn-lg w-100 mb-3">
+                <i class="bi bi-person-plus me-2"></i>
+                Create Account
+            </button>
+
+            <!-- Login Link -->
+            <div class="text-center mt-4">
+                <p class="text-muted mb-0">
+                    Already have an account?
+                    <a href="{{ url_for('auth.login') }}" class="text-primary fw-bold text-decoration-none">Log In</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Password confirmation validation
+    document.getElementById('password_confirm').addEventListener('input', function () {
+        const password = document.getElementById('password').value;
+        const confirm = this.value;
+
+        if (password !== confirm) {
+            this.setCustomValidity('Passwords do not match');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - SkillBridge{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Account Settings</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('user.settings') }}">
+                            <!-- Full Name -->
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" name="full_name"
+                                    value="{{ current_user.full_name or '' }}">
+                            </div>
+
+                            <!-- Bio -->
+                            <div class="mb-3">
+                                <label class="form-label">Bio</label>
+                                <textarea class="form-control" name="bio"
+                                    rows="3">{{ current_user.bio or '' }}</textarea>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" name="phone"
+                                    value="{{ current_user.phone or '' }}">
+                            </div>
+
+                            <hr>
+
+                            <h5 class="mb-3">Change Password</h5>
+
+                            <!-- Current Password -->
+                            <div class="mb-3">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" class="form-control" name="current_password">
+                            </div>
+
+                            <!-- New Password -->
+                            <div class="mb-3">
+                                <label class="form-label">New Password</label>
+                                <input type="password" class="form-control" name="new_password">
+                                <small class="text-muted">Leave blank to keep current password</small>
+                            </div>
+
+                            <!-- Save Button -->
+                            <button type="submit" class="btn btn-gradient-primary">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Save Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Portfolio Projects Section -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Project Showcase</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Showcase your completed projects to build credibility and attract more
+                            clients.</p>
+
+                        <!-- Add Project Form -->
+                        <form method="POST" action="{{ url_for('user.add_portfolio') }}" class="mb-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Project Title *</label>
+                                    <input type="text" class="form-control" name="title" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Project Link (URL)</label>
+                                    <input type="url" class="form-control" name="link" placeholder="https://...">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" name="description" rows="2"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Image URL</label>
+                                <input type="text" class="form-control" name="image_url"
+                                    placeholder="default-project.jpg">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Add Project
+                            </button>
+                        </form>
+
+                        <!-- Existing Projects -->
+                        {% if current_user.portfolio.count() > 0 %}
+                        <hr>
+                        <h6>Your Projects</h6>
+                        <div class="row g-3">
+                            {% for project in current_user.portfolio.all() %}
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ project.title }}</h6>
+                                        <p class="card-text small text-muted">{{ project.description or 'No description'
+                                            }}</p>
+                                        {% if project.link %}
+                                        <a href="{{ project.link }}" target="_blank"
+                                            class="btn btn-sm btn-outline-primary me-2">
+                                            <i class="bi bi-link-45deg"></i> View
+                                        </a>
+                                        {% endif %}
+                                        <form method="POST"
+                                            action="{{ url_for('user.delete_portfolio', project_id=project.id) }}"
+                                            class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Delete this project?')">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

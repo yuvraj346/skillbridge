@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - SkillBridge{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container py-5">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-4">
+                    About <span class="text-gradient">SkillBridge</span>
+                </h1>
+                <p class="lead text-muted">
+                    Connecting talented professionals with clients who need their expertise.
+                    We're building the future of skill-based services.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="stat-icon bg-primary mx-auto mb-3">
+                            <i class="bi bi-people-fill text-white"></i>
+                        </div>
+                        <h3 class="fw-bold">50,000+</h3>
+                        <p class="text-muted mb-0">Active Users</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="stat-icon bg-success mx-auto mb-3">
+                            <i class="bi bi-briefcase-fill text-white"></i>
+                        </div>
+                        <h3 class="fw-bold">100,000+</h3>
+                        <p class="text-muted mb-0">Services Listed</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="stat-icon bg-warning mx-auto mb-3">
+                            <i class="bi bi-star-fill text-white"></i>
+                        </div>
+                        <h3 class="fw-bold">99%</h3>
+                        <p class="text-muted mb-0">Satisfaction Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-lg-10 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5">
+                        <h2 class="fw-bold mb-4">Our Mission</h2>
+                        <p class="lead">
+                            SkillBridge was created to solve a simple problem: connecting people who have skills
+                            with people who need them. We believe that everyone has something valuable to offer,
+                            and everyone needs help with something.
+                        </p>
+                        <p>
+                            Our platform makes it easy for service providers to showcase their talents and for
+                            clients to find exactly what they're looking for. Whether you're a web developer,
+                            graphic designer, content writer, or tutor, SkillBridge helps you reach the right audience.
+                        </p>
+                        <p class="mb-0">
+                            We're committed to building a community where quality work is recognized, fair prices
+                            are the norm, and both providers and clients can thrive.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .stat-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+    }
+</style>
+{% endblock %}

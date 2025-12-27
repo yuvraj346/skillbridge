@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Services - SkillBridge{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 bg-white text-center border-bottom">
+    <div class="container py-4">
+        <h1 class="display-4 fw-bold mb-3">Find the Perfect Service</h1>
+        <p class="lead text-muted mb-5">Browse thousands of services from talented professionals</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form action="{{ url_for('service.browse') }}" method="GET">
+                    <div class="input-group input-group-lg bg-light rounded-pill p-1 border">
+                        <span class="input-group-text bg-transparent border-0 ps-4">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" name="q" class="form-control border-0 bg-transparent" value="{{ query }}"
+                            placeholder="Search services, skills, or providers..." autocomplete="off">
+                        <button class="btn btn-primary rounded-pill px-5 m-1" type="submit">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <!-- Filters Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0">Filters</h5>
+                </div>
+
+                <div class="card border-0 shadow-sm p-4 sticky-top" style="top: 100px; border-radius: 16px;">
+                    <form method="GET" action="{{ url_for('service.browse') }}" id="filterForm">
+                        <input type="hidden" name="q" value="{{ query }}">
+
+                        <!-- Category Filter -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold mb-3">Category</label>
+                            <div class="d-grid gap-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="category" value="" id="cat_all"
+                                        {% if not selected_category %}checked{% endif %} onchange="this.form.submit()">
+                                    <label class="form-check-label" for="cat_all">All Categories</label>
+                                </div>
+                                {% for cat in categories %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="category" value="{{ cat.id }}"
+                                        id="cat_{{ cat.id }}" {% if selected_category|int==cat.id %}checked{% endif %}
+                                        onchange="this.form.submit()">
+                                    <label class="form-check-label" for="cat_{{ cat.id }}">{{ cat.name }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold mb-3">Budget (₹)</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" class="form-control" name="min_price" placeholder="Min"
+                                        min="0">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" name="max_price" placeholder="Max"
+                                        min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill">Apply</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="col-lg-9">
+                <!-- Results Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="fw-bold mb-0 fs-5">{{ services|length }} services found</p>
+
+                    <div class="d-flex align-items-center">
+                        <label class="me-2 small text-muted">Sort by:</label>
+                        <select class="form-select form-select-sm border-0 bg-transparent fw-bold" name="sort"
+                            style="width: auto; cursor: pointer;"
+                            onchange="document.getElementById('filterForm').elements['sort'].value=this.value; document.getElementById('filterForm').submit()">
+                            <option value="rating" {% if sort_by=='rating' %}selected{% endif %}>Recommended</option>
+                            <option value="newest" {% if sort_by=='newest' %}selected{% endif %}>Newest</option>
+                            <option value="price_asc" {% if sort_by=='price_asc' %}selected{% endif %}>Price: Low to
+                                High</option>
+                            <option value="price_desc" {% if sort_by=='price_desc' %}selected{% endif %}>Price: High to
+                                Low</option>
+                        </select>
+
+                        <div class="ms-3 d-none d-md-flex">
+                            <button class="btn btn-primary btn-sm p-2 rounded"><i class="bi bi-grid-fill"></i></button>
+                            <button class="btn btn-light btn-sm p-2 rounded ms-1"><i class="bi bi-list"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Grid -->
+                {% if services %}
+                <div class="row g-4" id="servicesContainer">
+                    {% for service in services %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm service-card"
+                            style="border-radius: 16px; overflow: hidden; transition: transform 0.2s;">
+                            <!-- Service Image -->
+                            <div class="position-relative">
+                                <a href="{{ url_for('service.detail', service_id=service.id) }}">
+                                    <img src="{{ url_for('static', filename='images/' + service.image_url) if service.image_url else 'https://images.unsplash.com/photo-1542744173-05336fcc7ad4' }}"
+                                        class="card-img-top object-fit-cover" height="200" alt="{{ service.title }}"
+                                        onerror="this.src='https://via.placeholder.com/400x300?text=Service'">
+                                </a>
+                                <span
+                                    class="badge bg-primary position-absolute top-0 start-0 m-3 rounded-pill px-3">Featured</span>
+                            </div>
+
+                            <!-- Service Content -->
+                            <div class="card-body p-3">
+                                <!-- Provider Info -->
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="{{ service.provider.avatar_url }}" class="rounded-circle me-2" width="24"
+                                        height="24" onerror="this.src='https://via.placeholder.com/24?text=U'">
+                                    <span class="small fw-bold text-dark">{{ service.provider.username }}</span>
+                                </div>
+
+                                <!-- Title -->
+                                <h6 class="card-title fw-bold mb-2">
+                                    <a href="{{ url_for('service.detail', service_id=service.id) }}"
+                                        class="text-decoration-none text-dark stretched-link">
+                                        {{ service.title }}
+                                    </a>
+                                </h6>
+
+                                <!-- Rating -->
+                                <div class="mb-3 small">
+                                    <i class="bi bi-star-fill text-warning me-1"></i>
+                                    <span class="fw-bold">{{ service.get_average_rating() }}</span>
+                                    <span class="text-muted">({{ service.get_review_count() }})</span>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-auto">
+                                    <small class="text-muted">Starting at</small>
+                                    <span class="fw-bold fs-5">₹{{ "%.0f"|format(service.price * 86) }}</span>
+                                    <!-- Assuming price stored as USD, converting approx 86 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <!-- No Results -->
+                <div class="text-center py-5">
+                    <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
+                    <h4>No services found</h4>
+                    <p class="text-muted">Try adjusting your filters or search query</p>
+                    <a href="{{ url_for('service.browse') }}" class="btn btn-dark rounded-pill px-4">
+                        Clear Filters
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
+{% endblock %}
